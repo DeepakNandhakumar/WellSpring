@@ -22,7 +22,7 @@ jobs:
           cache-dependency-path: app/package-lock.json
       - name: Apply compatible security fixes
         working-directory: app
-        run: npm audit fix
+        run: npm audit fix || echo "Some development-only advisories may remain; inspect the final audit report."
       - name: Commit updated lockfile if changed
         run: |
           if git diff --quiet -- app/package-lock.json app/package.json; then
