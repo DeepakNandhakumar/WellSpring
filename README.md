@@ -25,19 +25,20 @@ Feature availability and production behavior must be verified with the test chec
 - MySQL 8+ or a permitted remote/managed MySQL instance
 
 ## Local development
-1. Create a development database named `wellspring_db` using your approved MySQL environment. If MySQL cannot be installed on your organisation laptop, use an organisation-approved remote development database or a permitted development environment; do not put production credentials in your local files.
-2. Set backend environment variables in your terminal or IDE run configuration:
+1. Create an empty development database named `wellspring_db` using your approved MySQL environment. If MySQL cannot be installed on your organisation laptop, use an organisation-approved remote development database or a permitted development environment; do not put production credentials in your local files.
+2. Flyway applies the versioned schema and educational-content migrations on backend startup. Do not run schema or seed SQL manually.
+3. Set backend environment variables in your terminal or IDE run configuration:
    - `DB_URL` — JDBC URL for the development database
    - `DB_USERNAME`
    - `DB_PASSWORD`
    - `JWT_SECRET` — a random secret used only for local development
    - `CORS_ALLOWED_ORIGINS=http://localhost:5173`
-3. Start the API from `wellspring-backend/` with `mvn spring-boot:run`.
-4. Create an untracked `app/.env.local` containing:
+4. Start the API from `wellspring-backend/` with `mvn spring-boot:run`.
+5. Create an untracked `app/.env.local` containing:
    ```dotenv
    VITE_API_URL=http://localhost:8080/api
    ```
-5. In `app/`, run `npm ci` then `npm run dev`.
+6. In `app/`, run `npm ci` then `npm run dev`.
 
 Never commit `.env.local`, passwords, signing keys, database dumps or real customer/health information.
 
