@@ -1,270 +1,80 @@
-# WELLSPRING – Preventive Health Intelligence Platform
+# WellSpring — Preventive Health Intelligence Platform
 
-## 📌 Project Overview
+WellSpring is a full-stack health-awareness application built with React, TypeScript, Vite, Java, Spring Boot, Spring Security, JWT and MySQL.
 
-**Wellspring – Preventive Health Intelligence Platform** is a full-stack web application designed to promote **preventive healthcare awareness** and encourage healthy lifestyle practices.
+## Features in the existing codebase
+- Disease awareness and prevention information
+- Medicinal plant and Ayurvedic educational content
+- Diet-plan browsing
+- BMI, sleep, symptom-checking and wellness utilities
+- User authentication and role-protected administration
+- Support/contact workflow
 
-The platform provides users with information about diseases, medicinal plants, Ayurvedic remedies, diet plans, and wellness practices that help individuals maintain better health.
+Feature availability and production behavior must be verified with the test checklist; source presence alone is not proof that every workflow is fully functional.
 
-Instead of searching across multiple websites, users can access **organized and reliable health information in one place**.
+> **Health disclaimer:** WellSpring is for general education, not diagnosis or treatment. Symptom results and wellness content must not replace advice from a qualified healthcare professional. Seek urgent medical help for emergency symptoms. Do not start, stop or change medication based on this app.
 
----
+## Repository layout
+- `app/` — React + TypeScript + Vite frontend
+- `wellspring-backend/` — Spring Boot REST API
 
-## 🎯 Project Objective
+## Requirements
+- Node.js LTS and npm
+- Java 17+
+- Maven 3.8+ (or a Maven wrapper, if added)
+- MySQL 8+ or a permitted remote/managed MySQL instance
 
-The main objective of this project is to:
+## Local development
+1. Create an empty development database named `wellspring_db` using your approved MySQL environment. If MySQL cannot be installed on your organisation laptop, use an organisation-approved remote development database or a permitted development environment; do not put production credentials in your local files.
+2. Flyway applies the versioned schema and educational-content migrations on backend startup. Do not run schema or seed SQL manually.
+3. Set backend environment variables in your terminal or IDE run configuration:
+   - `DB_URL` — JDBC URL for the development database
+   - `DB_USERNAME`
+   - `DB_PASSWORD`
+   - `JWT_SECRET` — a random secret used only for local development
+   - `CORS_ALLOWED_ORIGINS=http://localhost:5173`
+4. Start the API from `wellspring-backend/` with `mvn spring-boot:run`.
+5. Create an untracked `app/.env.local` containing:
+   ```dotenv
+   VITE_API_URL=http://localhost:8080/api
+   ```
+6. In `app/`, run `npm ci` then `npm run dev`.
 
-* Promote **preventive healthcare awareness**
-* Provide **reliable health information**
-* Help users adopt **healthy lifestyle habits**
-* Provide **natural remedies and Ayurvedic solutions**
-* Offer digital tools to monitor health conditions
+Never commit `.env.local`, passwords, signing keys, database dumps or real customer/health information.
 
----
-
-## 🚀 Features
-
-### 🩺 Health Awareness
-
-* Provides information about common diseases
-* Displays symptoms, causes, and prevention methods
-
-### 🌿 Medicinal Plants
-
-* Shows medicinal plants and their health benefits
-* Includes plant description and usage details
-
-### 🧘 Ayurvedic Solutions
-
-* Provides natural remedies and herbal treatments
-* Includes preparation methods and lifestyle advice
-
-### 🥗 Diet Plan Recommendations
-
-* Provides diet suggestions for maintaining good health
-* Recommends healthy foods and foods to avoid
-
-### 📊 Health Tools
-
-* BMI Calculator
-* Sleep Quality Checker
-* Symptom Checker
-* Health Todo Tracker
-
-### 👤 User System
-
-* User registration and login
-* Personalized dashboard for health tools
-
-### 🛠 Admin Panel
-
-* Manage diseases
-* Manage medicinal plants
-* Manage diet plans
-* Manage Ayurvedic solutions
-* View user support messages
-
----
-
-## 🏗 System Architecture
-
-The application follows a **3-Tier Architecture**:
-
-1️⃣ **Presentation Layer**
-
-* React.js
-* Tailwind CSS
-* TypeScript
-
-2️⃣ **Application Layer**
-
-* Spring Boot
-* REST APIs
-* Business Logic
-
-3️⃣ **Data Layer**
-
-* MySQL Database
-
----
-
-## 💻 Technology Stack
-
-### Frontend
-
-* React.js
-* TypeScript
-* HTML
-* CSS
-* Tailwind CSS
-* JavaScript
-
-### Backend
-
-* Java
-* Spring Boot
-* Spring Security
-* REST APIs
-
-### Database
-
-* MySQL
-
-### Development Tools
-
-* Visual Studio Code
-* Maven
-* Git & GitHub
-
----
-
-## 📂 Project Structure
-
-```
-WELLSPRINGPROJECT
-│
-├── app (Frontend - React)
-│   ├── src
-│   │   ├── components
-│   │   ├── pages
-│   │   ├── services
-│   │   ├── hooks
-│   │   └── utils
-│
-├── wellspring-backend (Backend - Spring Boot)
-│   ├── controller
-│   ├── entity
-│   ├── repository
-│   ├── service
-│   └── config
+## Build and test
+Frontend, from `app/`:
+```bash
+npm ci
+npm run lint
+npm run build
 ```
 
----
-
-## 🗄 Database Tables
-
-Main tables used in the system:
-
-* **Users**
-* **Diseases**
-* **Medicinal Plants**
-* **Ayurvedic Solutions**
-* **Diet Plans**
-
----
-
-## ⚙️ Installation & Setup
-
-### 1️⃣ Clone the Repository
-
-```
-git clone https://github.com/your-username/wellspring-project.git
+Backend, from `wellspring-backend/`:
+```bash
+mvn test
+mvn package
 ```
 
-### 2️⃣ Setup Backend
+Run the tests against an isolated test database. Do not point tests at production data. See the [Production Readiness Checklist](docs/PRODUCTION_CHECKLIST.md), [Test Report](docs/TEST_REPORT.md), [Dependency Audit](docs/DEPENDENCY_AUDIT.md), and [controlled administrator provisioning](docs/ADMIN_BOOTSTRAP.md).
 
-```
-cd wellspring-backend
-mvn spring-boot:run
-```
+## Production configuration
+Backend environment variables:
+- `PORT` — hosting platform port (defaults to 8080)
+- `DB_URL`, `DB_USERNAME`, `DB_PASSWORD` — managed MySQL connection
+- `JWT_SECRET` — strong, random, private signing key
+- `JWT_EXPIRATION` — token lifetime in milliseconds
+- `CORS_ALLOWED_ORIGINS` — exact deployed frontend origin(s), comma-separated
 
-### 3️⃣ Setup Frontend
+Frontend:
+- `VITE_API_URL` — absolute HTTPS API base URL ending in `/api`
 
-```
-cd app
-npm install
-npm run dev
-```
+Do not deploy with empty secrets, default credentials, broad CORS rules or demo admin accounts. Use TLS, database backups, restricted database network access, monitored health checks and a migration-controlled schema. Review all authorization rules and seed data before public launch.
 
-### 4️⃣ Database Setup
+## Security notice
+Credentials or JWT keys previously committed to Git must be treated as compromised and rotated. Updating a file does not remove secrets from Git history. Dependency/build folders previously committed must be removed from repository tracking in a dedicated cleanup change; `.gitignore` alone does not untrack existing files.
 
-* Install MySQL
-* Create database:
+## Deployment status
+Deployment is not claimed complete by this README. First pass the build/test checklist, configure the hosting provider and managed database, deploy the API, set the frontend API URL, then verify registration, login, protected routes and persisted CRUD flows against the live services.
 
-```
-wellspring_db
-```
-
-Update database credentials in:
-
-```
-application.properties
-```
-
----
-
-## 📸 Application Modules
-
-* Home Page
-* Disease Awareness
-* Medicinal Plants
-* Diet Plans
-* Ayurvedic Solutions
-* BMI Calculator
-* Sleep Checker
-* Symptom Checker
-* Yoga & Exercise
-* Health Todo
-* Admin Dashboard
-
----
-
-## 🔐 Security Features
-
-* User Authentication
-* Role-Based Access (Admin/User)
-* Protected API Endpoints
-* Input Validation
-* Secure Password Storage
-
----
-
-## 🧪 Testing
-
-The system was tested using:
-
-* Functional Testing
-* Performance Testing
-* Security Testing
-
-All modules were verified to ensure correct functionality and smooth integration.
-
----
-
-## 🔮 Future Enhancements
-
-Future improvements may include:
-
-* Mobile Application (Android & iOS)
-* AI-based disease prediction
-* Wearable device integration
-* Online doctor consultation
-* Health analytics dashboard
-* Multi-language support
-* Cloud deployment
-
----
-
-## 📚 References
-
-* Spring Boot Documentation
-* React Documentation
-* MySQL Documentation
-* MDN Web Docs
-* W3Schools Tutorials
-
----
-
-## 👨‍💻 Author
-
-**Deepak N**
-Bachelor of Computer Application (BCA)
-Department of Computer Science
-TERF’S Academy College of Arts and Science
-Affiliated to Bharathiar University
-
----
-
-## 📄 License
-
-This project is developed for **educational purposes** as part of the BCA final year project.
+No license is currently specified.

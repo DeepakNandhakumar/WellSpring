@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { Brain, Send, AlertCircle, User, Bot, ArrowRight, Activity, TrendingUp, Shield } from 'lucide-react';
+import { Brain, Send, AlertCircle, User, Bot, ArrowRight } from 'lucide-react';
 import { Card, CardContent } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -12,9 +12,8 @@ import { toast } from 'sonner';
 interface DiseaseMatch {
   diseaseId: number;
   diseaseName: string;
-  confidenceScore: number;
-  confidencePercentage: number;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  matchScore: number;
+  matchPercentage: number;
   recommendation: string;
   matchedSymptoms: string[];
   matchedCount: number;
@@ -33,40 +32,11 @@ const SymptomChecker: React.FC = () => {
     {
       id: '1',
       type: 'bot',
-      content: 'Hello! I\'m your AI Symptom Checker. Please describe your symptoms, and I\'ll analyze them using our advanced rule-based engine. Remember, this is not a medical diagnosis - always consult a healthcare professional.',
+      content: 'Hello! I\'m your Symptom Information Checker. Please describe your symptoms, and I\'ll analyze them using our advanced rule-based engine. Remember, this is not a medical diagnosis - always consult a healthcare professional.',
     },
   ]);
   const [input, setInput] = useState('');
   const [isTyping, setIsTyping] = useState(false);
-
-  const getSeverityColor = (severity: string) => {
-    switch (severity) {
-      case 'CRITICAL':
-        return 'bg-red-600 text-white';
-      case 'HIGH':
-        return 'bg-orange-500 text-white';
-      case 'MEDIUM':
-        return 'bg-yellow-500 text-black';
-      case 'LOW':
-        return 'bg-green-500 text-white';
-      default:
-        return 'bg-gray-500 text-white';
-    }
-  };
-
-  const getSeverityIcon = (severity: string) => {
-    switch (severity) {
-      case 'CRITICAL':
-      case 'HIGH':
-        return <AlertCircle className="w-4 h-4" />;
-      case 'MEDIUM':
-        return <TrendingUp className="w-4 h-4" />;
-      case 'LOW':
-        return <Shield className="w-4 h-4" />;
-      default:
-        return <Activity className="w-4 h-4" />;
-    }
-  };
 
   const handleSend = async () => {
     if (!input.trim()) return;
@@ -127,8 +97,7 @@ const SymptomChecker: React.FC = () => {
             AI Symptom Checker
           </h1>
           <p className="text-gray-600">
-            Describe your symptoms and get AI-powered analysis with confidence scores. 
-            Our rule-based engine uses weighted symptom mapping for accurate results.
+            Describe your symptoms to see keyword-based matches from our educational rules. The match score is not a probability, diagnosis, or measure of medical severity.
           </p>
         </div>
 
@@ -138,8 +107,7 @@ const SymptomChecker: React.FC = () => {
           <div>
             <p className="text-sm text-red-800 font-medium">Medical Disclaimer</p>
             <p className="text-sm text-red-700">
-              This AI Symptom Checker uses rule-based analysis for educational purposes only. 
-              It cannot provide medical diagnoses. If you have serious symptoms, please seek immediate medical attention.
+              This tool uses simple rule-based matching for education only. It cannot diagnose, rule out, or assess the severity of a condition. For severe or sudden symptoms, seek urgent medical care.
             </p>
           </div>
         </div>
@@ -168,7 +136,7 @@ const SymptomChecker: React.FC = () => {
                           <Bot className="w-4 h-4 mr-2" />
                         )}
                         <span className="text-xs font-medium">
-                          {message.type === 'user' ? 'You' : 'AI Assistant'}
+                          {message.type === 'user' ? 'You' : 'WellSpring Guide'}
                         </span>
                       </div>
                       <p className="text-sm">{message.content}</p>
@@ -185,10 +153,7 @@ const SymptomChecker: React.FC = () => {
                               <div>
                                 <h4 className="font-semibold text-gray-800">{match.diseaseName}</h4>
                                 <div className="flex items-center space-x-2 mt-1">
-                                  <Badge className={getSeverityColor(match.severity)}>
-                                    {getSeverityIcon(match.severity)}
-                                    <span className="ml-1">{match.severity}</span>
-                                  </Badge>
+                                  <Badge variant="secondary">Keyword match</Badge>
                                   <span className="text-sm text-gray-500">
                                     {match.matchedCount}/{match.totalSymptoms} symptoms matched
                                   </span>
@@ -196,16 +161,16 @@ const SymptomChecker: React.FC = () => {
                               </div>
                               <div className="text-right">
                                 <span className="text-2xl font-bold text-[#1e88e5]">
-                                  {match.confidencePercentage}%
+                                  {match.matchPercentage}%
                                 </span>
-                                <p className="text-xs text-gray-500">Confidence</p>
+                                <p className="text-xs text-gray-500">Rule-match score</p>
                               </div>
                             </div>
                             
-                            {/* Confidence Progress Bar */}
+                            {/* Rule-match score visualisation, not a diagnostic probability */}
                             <div className="mb-3">
                               <Progress 
-                                value={match.confidencePercentage} 
+                                value={match.matchPercentage} 
                                 className="h-2"
                               />
                             </div>

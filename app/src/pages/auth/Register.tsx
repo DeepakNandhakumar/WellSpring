@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, User, ArrowRight, Loader2, CheckCircle, Sparkles } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -57,9 +58,10 @@ const Register: React.FC = () => {
         toast.success('Account created successfully!');
         navigate('/dashboard');
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Registration error:', error);
-      toast.error(error.response?.data?.message || 'Failed to create account');
+      const message = axios.isAxiosError<{ message?: string }>(error) ? error.response?.data?.message : undefined;
+      toast.error(message || 'Failed to create account');
     } finally {
       setLoading(false);
     }

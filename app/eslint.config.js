@@ -19,5 +19,9 @@ export default defineConfig([
       ecmaVersion: 2020,
       globals: globals.browser,
     },
+    rules: {
+      // UI primitives and context modules intentionally export helpers alongside components.
+      'react-refresh/only-export-components': 'off',
+    },
   },
 ])

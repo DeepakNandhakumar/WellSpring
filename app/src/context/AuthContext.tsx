@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface User {
   id: number;
@@ -10,7 +10,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (token: string, user: User) => void;
+  login: (token: string, user: User, rememberMe?: boolean) => void;
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -32,32 +32,47 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
+  const [initialAuth] = useState(() => {
+    const storedToken = localStorage.getItem('wellspring_token') ?? sessionStorage.getItem('wellspring_token');
+    const storedUser = localStorage.getItem('wellspring_user') ?? sessionStorage.getItem('wellspring_user');
 
-  useEffect(() => {
-    // Check for stored auth data on mount
-    const storedToken = localStorage.getItem('wellspring_token');
-    const storedUser = localStorage.getItem('wellspring_user');
-    
-    if (storedToken && storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setToken(storedToken);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('wellspring_token');
-        localStorage.removeItem('wellspring_user');
-      }
+    if (!storedToken || !storedUser) {
+      return { token: null, user: null };
     }
-    setLoading(false);
-  }, []);
 
-  const login = (newToken: string, newUser: User) => {
-    localStorage.setItem('wellspring_token', newToken);
-    localStorage.setItem('wellspring_user', JSON.stringify(newUser));
+    try {
+      const parsedUser = JSON.parse(storedUser) as User;
+      if (
+        parsedUser &&
+        typeof parsedUser.id === 'number' &&
+        typeof parsedUser.name === 'string' &&
+        typeof parsedUser.email === 'string' &&
+        (parsedUser.role === 'USER' || parsedUser.role === 'ADMIN')
+      ) {
+        return { token: storedToken, user: parsedUser };
+      }
+    } catch (error) {
+      console.error('Invalid stored authentication state:', error);
+    }
+
+    localStorage.removeItem('wellspring_token');
+    localStorage.removeItem('wellspring_user');
+    sessionStorage.removeItem('wellspring_token');
+    sessionStorage.removeItem('wellspring_user');
+    return { token: null, user: null };
+  });
+
+  const [user, setUser] = useState<User | null>(initialAuth.user);
+  const [token, setToken] = useState<string | null>(initialAuth.token);
+  const loading = false;
+
+  const login = (newToken: string, newUser: User, rememberMe = true) => {
+    const storage = rememberMe ? localStorage : sessionStorage;
+    const otherStorage = rememberMe ? sessionStorage : localStorage;
+    otherStorage.removeItem('wellspring_token');
+    otherStorage.removeItem('wellspring_user');
+    storage.setItem('wellspring_token', newToken);
+    storage.setItem('wellspring_user', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
   };
@@ -65,6 +80,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('wellspring_token');
     localStorage.removeItem('wellspring_user');
+    sessionStorage.removeItem('wellspring_token');
+    sessionStorage.removeItem('wellspring_user');
     setToken(null);
     setUser(null);
   };

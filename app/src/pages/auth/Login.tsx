@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -42,7 +43,7 @@ const Login: React.FC = () => {
       
       if (response.data.success) {
         const { token, ...user } = response.data.data;
-        login(token, user);
+        login(token, user, formData.rememberMe);
         toast.success('Login successful!');
         
         // Redirect based on role
@@ -52,9 +53,10 @@ const Login: React.FC = () => {
           navigate('/dashboard');
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error);
-      toast.error(error.response?.data?.message || 'Invalid email or password');
+      const message = axios.isAxiosError<{ message?: string }>(error) ? error.response?.data?.message : undefined;
+      toast.error(message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }
@@ -139,9 +141,9 @@ const Login: React.FC = () => {
                     Remember me
                   </Label>
                 </div>
-                <Link to="#" className="text-sm text-[#1e88e5] hover:underline">
-                  Forgot password?
-                </Link>
+                <span className="text-xs text-gray-500 text-right max-w-[150px]">
+                  Password reset is not enabled yet. Contact your administrator.
+                </span>
               </div>
 
               <Button

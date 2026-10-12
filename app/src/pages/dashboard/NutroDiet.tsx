@@ -88,7 +88,7 @@ const NutroDiet: React.FC = () => {
             Nutro Diet Plans
           </h1>
           <p className="text-gray-600">
-            Get personalized diet recommendations based on your health condition, age, and dietary preferences.
+            Explore sample meal ideas by selected condition, age group, and diet type. These are general examples, not personalized medical nutrition plans.
           </p>
         </div>
 
@@ -98,8 +98,7 @@ const NutroDiet: React.FC = () => {
           <div>
             <p className="text-sm text-amber-800 font-medium">Important Note</p>
             <p className="text-sm text-amber-700">
-              These diet plans are for educational purposes only. Consult a nutritionist or healthcare 
-              provider before making significant dietary changes.
+              These sample menus are educational and are not individualized treatment plans. Dietary needs vary by person; consult a registered dietitian or healthcare professional before making significant changes, especially if you have a medical condition.
             </p>
           </div>
         </div>

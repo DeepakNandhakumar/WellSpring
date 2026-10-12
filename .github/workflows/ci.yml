@@ -1,0 +1,86 @@
+name: WellSpring CI
+
+on:
+  push:
+    branches: [main, production-readiness]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend lint and build
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - run: npm ci
+      - run: npm audit --omit=dev --audit-level=high
+      - run: npm run lint
+      - run: npm run build
+
+  backend:
+    name: Backend tests, migrations and package
+    runs-on: ubuntu-latest
+    services:
+      mysql:
+        image: mysql:8.4
+        env:
+          MYSQL_ROOT_PASSWORD: root-password-for-ci-only
+          MYSQL_DATABASE: wellspring_db
+        ports:
+          - 3306:3306
+        options: >-
+          --health-cmd="mysqladmin ping -h 127.0.0.1 -proot-password-for-ci-only"
+          --health-interval=10s
+          --health-timeout=5s
+          --health-retries=10
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Test and package
+        working-directory: wellspring-backend
+        run: mvn --batch-mode test package
+      - name: Smoke-test production profile and Flyway migrations
+        working-directory: wellspring-backend
+        env:
+          DB_URL: jdbc:mysql://127.0.0.1:3306/wellspring_db?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+          DB_USERNAME: root
+          DB_PASSWORD: root-password-for-ci-only
+          JWT_SECRET: ci-only-secret-change-before-deploy-0123456789abcdefghijklmnopqrstuvwxyzABCDEFGH
+          CORS_ALLOWED_ORIGINS: http://localhost:5173
+          SPRING_PROFILES_ACTIVE: prod
+        run: |
+          java -jar target/wellspring-backend-1.0.0.jar > /tmp/wellspring.log 2>&1 &
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --max-time 2 http://127.0.0.1:8080/api/health; then
+              curl --fail --silent --max-time 5 http://127.0.0.1:8080/api/diseases > /tmp/diseases.json
+              python3 -c "import json; d=json.load(open('/tmp/diseases.json')); assert d['success'] and any(x['name']=='Diabetes' for x in d['data'])"
+              curl --fail --silent --max-time 5 -X POST http://127.0.0.1:8080/api/auth/register -H 'Content-Type: application/json' -d '{"name":"CI Smoke User","email":"ci-smoke@example.com","password":"SmokeTestPass!123"}' > /tmp/register.json
+              python3 -c "import json; d=json.load(open('/tmp/register.json')); assert d['success'] and d['data']['token']"
+              curl --fail --silent --max-time 5 -X POST http://127.0.0.1:8080/api/auth/login -H 'Content-Type: application/json' -d '{"email":"ci-smoke@example.com","password":"SmokeTestPass!123"}' > /tmp/login.json
+              TOKEN=$(python3 -c "import json; print(json.load(open('/tmp/login.json'))['data']['token'])")
+              curl --fail --silent --max-time 5 http://127.0.0.1:8080/api/auth/me -H "Authorization: Bearer $TOKEN" > /tmp/me.json
+              python3 -c "import json; d=json.load(open('/tmp/me.json')); assert d['success'] and d['data']['email']=='ci-smoke@example.com'"
+              STATUS=$(curl --silent --max-time 5 -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/api/support -H "Authorization: Bearer $TOKEN")
+              test "$STATUS" = "403"
+              echo "Flyway migrations, public data, registration, login, current-user access and admin authorization passed."
+              exit 0
+            fi
+            sleep 2
+          done
+          cat /tmp/wellspring.log
+          exit 1
