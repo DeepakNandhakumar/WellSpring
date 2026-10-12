@@ -1,13 +1,8 @@
 -- WellSpring Database Schema
 -- Preventive Health Intelligence Platform
 
--- Drop tables if they exist (for clean setup)
-DROP TABLE IF EXISTS support_messages;
-DROP TABLE IF EXISTS ayurvedic_solutions;
-DROP TABLE IF EXISTS diet_plans;
-DROP TABLE IF EXISTS medicinal_plants;
-DROP TABLE IF EXISTS diseases;
-DROP TABLE IF EXISTS users;
+-- Non-destructive initial schema for an EMPTY development database only.
+-- Never execute against an existing production database. Use reviewed migrations for upgrades.
 
 -- Users Table
 CREATE TABLE users (
