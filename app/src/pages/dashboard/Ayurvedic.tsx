@@ -94,7 +94,7 @@ const Ayurvedic: React.FC = () => {
             Ayurvedic Solutions
           </h1>
           <p className="text-gray-600">
-            Discover traditional Ayurvedic remedies and lifestyle recommendations for holistic healing.
+            Explore educational notes about traditional practices and general lifestyle topics. This content does not establish treatment effectiveness.
           </p>
         </div>
 
@@ -104,9 +104,7 @@ const Ayurvedic: React.FC = () => {
           <div>
             <p className="text-sm text-amber-800 font-medium">Ayurvedic Disclaimer</p>
             <p className="text-sm text-amber-700">
-              These remedies are based on traditional Ayurvedic practices. Consult an Ayurvedic 
-              practitioner before using any herbs or remedies, especially if you have existing 
-              health conditions or are taking medications.
+              This information is educational, not a treatment recommendation. Herbs and supplements can cause harm or interact with medicines; do not replace prescribed care. Discuss any product with a qualified healthcare professional.
             </p>
           </div>
         </div>
