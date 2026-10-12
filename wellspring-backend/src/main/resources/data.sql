@@ -179,54 +179,16 @@ INSERT INTO diet_plans (disease_id, age_group, type, breakfast, lunch, dinner, a
  '2 rotis, bottle gourd curry, dal soup, warm water',
  'Spicy food, fried foods, processed foods, excess dairy, carbonated drinks, alcohol');
 
--- Ayurvedic Solutions Data
+-- Educational Ayurvedic content only. This seed deliberately avoids prescribing herbs or home remedies.
+-- Herbal products can cause adverse effects and interact with medicines; consult a qualified clinician.
 INSERT INTO ayurvedic_solutions (disease_id, herbs, home_remedy, lifestyle_changes) VALUES
-(1, 
- 'Gurmar (Gymnema sylvestre), Jamun (Syzygium cumini), Methi (Fenugreek), Neem, Tulsi, Amla, Vijaysar',
- 'Drink methi water soaked overnight on empty stomach. Consume jamun seeds powder (1 tsp) with warm water. Drink bitter gourd juice every morning.',
- 'Wake up early (Brahma muhurta), practice yoga asanas like Vajrasana after meals, avoid daytime sleeping, regular exercise, stress management through meditation.'),
-
-(2, 
- 'Arjuna (Terminalia arjuna), Ashwagandha, Brahmi, Sarpagandha, Jatamansi',
- 'Mix 1 tsp of Arjuna bark powder with warm water and honey, consume twice daily. Drink hibiscus tea. Take ashwagandha powder with milk before bed.',
- 'Regular pranayama (especially Anulom Vilom), avoid anger and stress, maintain regular sleep schedule, reduce salt intake, practice meditation daily.'),
-
-(3, 
- 'Arjuna, Pushkarmool (Inula racemosa), Garlic (Lasuna), Ginger, Turmeric',
- 'Consume 2-3 garlic cloves raw on empty stomach. Drink ginger-turmeric tea twice daily. Take Arjuna powder with honey and warm water.',
- 'Regular light exercise like walking, avoid heavy meals, quit smoking completely, practice yoga asanas like Tadasana, Bhujangasana, manage stress levels.'),
-
-(4, 
- 'Vasaka (Adhatoda vasica), Kantakari (Solanum xanthocarpum), Haridra (Turmeric), Tulsi, Pippali',
- 'Drink tulsi tea with ginger and honey. Inhale steam with eucalyptus oil. Consume turmeric milk before bed. Take licorice (mulethi) decoction.',
- 'Avoid cold and damp environments, practice breathing exercises (Pranayama), avoid exposure to allergens, maintain clean living space, regular light exercise.'),
-
-(5, 
- 'Shallaki (Boswellia serrata), Guggulu, Ashwagandha, Nirgundi (Vitex negundo), Eranda (Castor)',
- 'Apply warm castor oil on affected joints. Consume turmeric with warm milk twice daily. Massage with sesame oil mixed with camphor.',
- 'Regular gentle exercise like swimming, avoid cold and damp weather, maintain healthy weight, practice yoga asanas suitable for arthritis, hot water fomentation.'),
-
-(6, 
- 'Guggulu, Triphala, Vidanga (Embelia ribes), Musta (Cyperus rotundus), Ginger',
- 'Drink warm water with lemon and honey on empty stomach. Consume triphala powder with warm water before bed. Drink ginger tea after meals.',
- 'Eat only when hungry, avoid overeating, regular exercise (brisk walking), avoid daytime sleeping, practice yoga asanas like Surya Namaskar, eat early dinner.'),
-
-(7, 
- 'Brahmi, Ashwagandha, Jatamansi (Nardostachys jatamansi), Shankhpushpi, Vacha (Acorus calamus)',
- 'Drink brahmi tea with honey. Massage head with warm sesame oil before bed. Take ashwagandha powder with warm milk. Practice Nasya with brahmi ghee.',
- 'Regular meditation practice, adequate sleep (7-8 hours), avoid overthinking, practice Pranayama (Bhramari, Anulom Vilom), spend time in nature, digital detox.'),
-
-(8, 
- 'Tagara (Valeriana wallichii), Ashwagandha, Jatamansi, Shankhpushpi, Brahmi, Sarpagandha',
- 'Drink warm milk with nutmeg powder before bed. Massage feet with warm sesame oil. Take ashwagandha with milk at night. Drink chamomile tea.',
- 'Maintain regular sleep schedule, avoid daytime napping, create dark and quiet sleep environment, avoid screens 1 hour before bed, practice Yoga Nidra, light dinner.'),
-
-(9, 
- 'Triphala, Ginger, Pippali (Long pepper), Ajwain (Carom seeds), Hing (Asafoetida), Jeera (Cumin)',
- 'Drink ginger-ajwain water throughout the day. Consume triphala churna with warm water before bed. Drink buttermilk with roasted cumin after meals.',
- 'Eat meals at regular times, avoid overeating, chew food properly, take short walk after meals, avoid lying down immediately after eating, practice Vajrasana after meals.'),
-
-(10, 
- 'Tulsi, Ginger, Pippali, Yashtimadhu (Licorice), Haridra, Vasa (Adhatoda vasica)',
- 'Drink tulsi-ginger tea with honey 3-4 times daily. Gargle with warm salt water with turmeric. Inhale steam with eucalyptus oil. Consume honey with black pepper.',
- 'Rest adequately, stay warm, avoid cold foods and drinks, drink plenty of warm fluids, avoid strenuous exercise, practice Pranayama once recovered.');
+(1, 'Educational overview only. No herb is recommended as a diabetes treatment by this seed.', 'Do not use home remedies to replace prescribed diabetes care. Discuss supplements with a qualified clinician.', 'Follow an individualized care plan from a qualified healthcare professional.'),
+(2, 'Educational overview only. No herb is recommended as a blood-pressure treatment by this seed.', 'Do not use home remedies to replace blood-pressure monitoring or prescribed treatment.', 'Follow a clinician-approved plan for monitoring, nutrition, activity and prescribed treatment.'),
+(3, 'Educational overview only. No herb is recommended as a heart-disease treatment by this seed.', 'Herbal products are not emergency care and may interact with heart medicines.', 'Follow your clinician-approved heart-health plan and seek urgent care for possible emergency symptoms.'),
+(4, 'Educational overview only. No herb is recommended as an asthma treatment by this seed.', 'Do not replace prescribed inhalers or an asthma action plan with herbal remedies.', 'Follow the asthma action plan provided by a qualified healthcare professional.'),
+(5, 'Educational overview only. No herb is recommended as an arthritis treatment by this seed.', 'Discuss any topical or oral herbal product with a qualified clinician or pharmacist before use.', 'Choose activity and joint-care options with a healthcare professional based on your individual needs.'),
+(6, 'Educational overview only. No herb is recommended as an obesity treatment by this seed.', 'Avoid unverified weight-loss products and consult a qualified healthcare professional for personalized advice.', 'Seek supportive, sustainable nutrition and activity guidance appropriate to your circumstances.'),
+(7, 'Educational overview only. No herb is recommended as a mental-health treatment by this seed.', 'Do not stop prescribed treatment or rely on supplements without discussing them with a qualified clinician.', 'Consider evidence-based support and consult a qualified mental-health professional when needed.'),
+(8, 'Educational overview only. No herb is recommended as an insomnia treatment by this seed.', 'Discuss supplements or sleep products with a qualified clinician, especially if taking medication.', 'A clinician can help assess persistent sleep difficulties and discuss evidence-based options.'),
+(9, 'Educational overview only. No herb is recommended as a digestive-disorder treatment by this seed.', 'Persistent, severe or worsening digestive symptoms need professional assessment; avoid unverified remedies.', 'Seek individualized guidance for ongoing symptoms, dietary needs or possible food intolerances.'),
+(10, 'Educational overview only. No herb is recommended as a cold or flu treatment by this seed.', 'Do not use herbal remedies as a substitute for professional care when symptoms are severe or worsening.', 'Follow public-health guidance and consult a qualified healthcare professional if concerned.');
