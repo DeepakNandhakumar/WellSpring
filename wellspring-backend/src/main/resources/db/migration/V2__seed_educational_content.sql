@@ -76,7 +76,7 @@ INSERT INTO medicinal_plants (plant_name, scientific_name, uses, image_url) VALU
 ('Giloy', 'Tinospora cordifolia', 'Herbal product used in traditional practices. Liver injury has been reported with some products; do not use it as a treatment without qualified medical advice.', 'https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?w=400'),
 ('Brahmi', 'Bacopa monnieri', 'Herb used in some traditional preparations. Evidence, product quality and safety vary; it may interact with medicines and is not a substitute for care.', 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400'),
 ('Moringa', 'Moringa oleifera', 'Edible plant used as food in some regions. Supplements and extracts differ from ordinary food and should be assessed for quality and suitability.', 'https://images.unsplash.com/photo-1596547609652-9cf5d8d76921?w=400'),
-('Peppermint', 'Mentha × piperita', 'Aromatic herb used in foods and teas. Concentrated essential oils can be harmful if misused; follow product safety instructions and seek professional advice when needed.');
+('Peppermint', 'Mentha × piperita', 'Aromatic herb used in foods and teas. Concentrated essential oils can be harmful if misused; follow product safety instructions and seek professional advice when needed.', 'https://images.unsplash.com/photo-1562690868-60bbe7293e94?w=400');
 
 -- Diet Plans Data
 INSERT INTO diet_plans (disease_id, age_group, type, breakfast, lunch, dinner, avoid_food) VALUES
