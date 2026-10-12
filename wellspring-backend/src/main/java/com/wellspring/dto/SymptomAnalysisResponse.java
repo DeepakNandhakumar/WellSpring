@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 /**
- * DTO for AI Symptom Checker Analysis Response
+ * DTO for educational symptom keyword-match response
  */
 @Data
 @NoArgsConstructor
@@ -28,16 +28,11 @@ public class SymptomAnalysisResponse {
     public static class DiseaseMatch {
         private Long diseaseId;
         private String diseaseName;
-        private double confidenceScore;
-        private int confidencePercentage;
-        private SeverityLevel severity;
+        private double matchScore;
+        private int matchPercentage;
         private String recommendation;
         private List<String> matchedSymptoms;
         private int matchedCount;
         private int totalSymptoms;
-    }
-
-    public enum SeverityLevel {
-        LOW, MEDIUM, HIGH, CRITICAL
     }
 }
