@@ -61,9 +61,9 @@ const MedicinalPlants: React.FC = () => {
   };
 
   const plantBenefits = [
-    { title: 'Natural Healing', desc: 'Plant-based remedies with minimal side effects', icon: Heart },
-    { title: 'Boosts Immunity', desc: 'Strengthens the body\'s natural defense system', icon: Beaker },
-    { title: 'Holistic Care', desc: 'Treats the root cause, not just symptoms', icon: Leaf },
+    { title: 'Traditional Context', desc: 'Learn how plants appear in food and cultural traditions', icon: Heart },
+    { title: 'Safety Matters', desc: 'Evidence, preparation, and interactions vary by product', icon: Beaker },
+    { title: 'Educational Guide', desc: 'Explore plant profiles, not medical treatment claims', icon: Leaf },
   ];
 
   return (
