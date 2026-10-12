@@ -12,9 +12,8 @@ import { toast } from 'sonner';
 interface DiseaseMatch {
   diseaseId: number;
   diseaseName: string;
-  confidenceScore: number;
-  confidencePercentage: number;
-  severity: 'LOW' | 'MEDIUM' | 'HIGH' | 'CRITICAL';
+  matchScore: number;
+  matchPercentage: number;
   recommendation: string;
   matchedSymptoms: string[];
   matchedCount: number;
@@ -162,7 +161,7 @@ const SymptomChecker: React.FC = () => {
                               </div>
                               <div className="text-right">
                                 <span className="text-2xl font-bold text-[#1e88e5]">
-                                  {match.confidencePercentage}%
+                                  {match.matchPercentage}%
                                 </span>
                                 <p className="text-xs text-gray-500">Rule-match score</p>
                               </div>
@@ -171,7 +170,7 @@ const SymptomChecker: React.FC = () => {
                             {/* Rule-match score visualisation, not a diagnostic probability */}
                             <div className="mb-3">
                               <Progress 
-                                value={match.confidencePercentage} 
+                                value={match.matchPercentage} 
                                 className="h-2"
                               />
                             </div>
