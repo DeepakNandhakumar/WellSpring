@@ -43,7 +43,7 @@ const Login: React.FC = () => {
       
       if (response.data.success) {
         const { token, ...user } = response.data.data;
-        login(token, user);
+        login(token, user, formData.rememberMe);
         toast.success('Login successful!');
         
         // Redirect based on role
@@ -141,9 +141,9 @@ const Login: React.FC = () => {
                     Remember me
                   </Label>
                 </div>
-                <Link to="#" className="text-sm text-[#1e88e5] hover:underline">
-                  Forgot password?
-                </Link>
+                <span className="text-xs text-gray-500 text-right max-w-[150px]">
+                  Password reset is not enabled yet. Contact your administrator.
+                </span>
               </div>
 
               <Button
