@@ -11,7 +11,7 @@ Audit scope: GitHub source tree on `main` and `security-repo-cleanup`. This is s
 
 ## Findings
 1. **Critical — credentials in repository history:** the original `main` configuration contained a database password and hard-coded JWT secret. Treat them as compromised and rotate them. Removing them from a later commit does not erase history.
-2. **High — generated content tracked:** the cleanup branch tree still included roughly 28,714 paths under `node_modules`, plus frontend build and backend target artifacts. Ignore rules do not remove files already tracked.
+2. **High — generated content tracked (remediation committed on this branch):** the starting cleanup branch tracked more than 26,000 generated dependency/build files. The `production-readiness` branch now removes `app/node_modules`, `app/dist`, `wellspring-backend/target`, and `.vscode` from the current tree; `.gitignore` prevents them being re-added. Previously committed blobs can still exist in Git history.
 3. **High — seed credentials:** existing seed SQL includes a known demo/admin account pattern. Production must not initialize a default administrator. Review and replace seed initialization before launch.
 4. **High — schema strategy:** the existing schema SQL starts by dropping tables. It must never be executed against production. Production profile should validate a migration-managed schema instead.
 5. **High — deployment settings:** production frontend URL, database credentials, JWT secret, CORS and hosting port need environment-based configuration.
@@ -30,7 +30,7 @@ Audit scope: GitHub source tree on `main` and `security-repo-cleanup`. This is s
 ## Not yet verified
 - No local build/test command has been executed in this audit.
 - No deployment or live API/database integration has been performed.
-- Tracked generated directories still require removal from the Git tree.
+- Generated dependency/build artifacts have been removed from the current branch tree; old Git history may still contain them.
 - Seed SQL still requires a safe production initialization redesign.
 - Authentication, authorization, endpoint contracts, health content, and all UI flows need test-driven review.
 
