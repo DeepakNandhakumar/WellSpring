@@ -65,8 +65,8 @@ jobs:
           SPRING_PROFILES_ACTIVE: prod
         run: |
           java -jar target/wellspring-backend-1.0.0.jar > /tmp/wellspring.log 2>&1 &
-          for attempt in $(seq 1 60); do
-            if curl --fail --silent http://127.0.0.1:8080/api/health; then
+          for attempt in $(seq 1 30); do
+            if curl --fail --silent --max-time 2 http://127.0.0.1:8080/api/health; then
               echo "Backend started and Flyway migrations completed."
               exit 0
             fi
