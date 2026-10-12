@@ -120,8 +120,7 @@ const MedicinalPlants: React.FC = () => {
           <div>
             <p className="text-sm text-amber-800 font-medium">Important Note</p>
             <p className="text-sm text-amber-700">
-              While these plants have traditional medicinal uses, consult an Ayurvedic practitioner 
-              or healthcare provider before using them for treatment.
+              Plant profiles describe traditional context and do not prove safety or effectiveness. Supplements can interact with medicines; consult a qualified healthcare professional before use.
             </p>
           </div>
         </div>
