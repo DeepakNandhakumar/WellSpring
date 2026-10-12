@@ -56,7 +56,7 @@ mvn test
 mvn package
 ```
 
-Run the tests against an isolated test database. Do not point tests at production data. See [Production Readiness Checklist](docs/PRODUCTION_CHECKLIST.md) and [controlled administrator provisioning](docs/ADMIN_BOOTSTRAP.md).
+Run the tests against an isolated test database. Do not point tests at production data. See the [Production Readiness Checklist](docs/PRODUCTION_CHECKLIST.md), [Test Report](docs/TEST_REPORT.md), [Dependency Audit](docs/DEPENDENCY_AUDIT.md), and [controlled administrator provisioning](docs/ADMIN_BOOTSTRAP.md).
 
 ## Production configuration
 Backend environment variables:
