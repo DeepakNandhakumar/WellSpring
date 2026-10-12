@@ -81,10 +81,10 @@ export const diseaseAPI = {
   search: (keyword: string) =>
     api.get(`/diseases/search?keyword=${keyword}`),
   
-  create: (data: any) =>
+  create: (data: unknown) =>
     api.post('/diseases', data),
   
-  update: (id: number, data: any) =>
+  update: (id: number, data: unknown) =>
     api.put(`/diseases/${id}`, data),
   
   delete: (id: number) =>
@@ -102,10 +102,10 @@ export const plantAPI = {
   search: (keyword: string) =>
     api.get(`/plants/search?keyword=${keyword}`),
   
-  create: (data: any) =>
+  create: (data: unknown) =>
     api.post('/plants', data),
   
-  update: (id: number, data: any) =>
+  update: (id: number, data: unknown) =>
     api.put(`/plants/${id}`, data),
   
   delete: (id: number) =>
@@ -126,10 +126,10 @@ export const dietPlanAPI = {
   getByFilter: (diseaseId: number, ageGroup: string, type: string) =>
     api.get(`/diet-plans/filter?diseaseId=${diseaseId}&ageGroup=${ageGroup}&type=${type}`),
   
-  create: (data: any) =>
+  create: (data: unknown) =>
     api.post('/diet-plans', data),
   
-  update: (id: number, data: any) =>
+  update: (id: number, data: unknown) =>
     api.put(`/diet-plans/${id}`, data),
   
   delete: (id: number) =>
@@ -147,10 +147,10 @@ export const ayurvedicAPI = {
   getByDisease: (diseaseId: number) =>
     api.get(`/ayurvedic/disease/${diseaseId}`),
   
-  create: (data: any) =>
+  create: (data: unknown) =>
     api.post('/ayurvedic', data),
   
-  update: (id: number, data: any) =>
+  update: (id: number, data: unknown) =>
     api.put(`/ayurvedic/${id}`, data),
   
   delete: (id: number) =>
@@ -165,7 +165,7 @@ export const supportAPI = {
   getById: (id: number) =>
     api.get(`/support/${id}`),
   
-  create: (data: any) =>
+  create: (data: unknown) =>
     api.post('/support', data),
   
   delete: (id: number) =>
