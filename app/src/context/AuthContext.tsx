@@ -10,7 +10,7 @@ interface User {
 interface AuthContextType {
   user: User | null;
   token: string | null;
-  login: (token: string, user: User) => void;
+  login: (token: string, user: User, rememberMe?: boolean) => void;
   logout: () => void;
   isAuthenticated: boolean;
   isAdmin: boolean;
@@ -33,8 +33,8 @@ interface AuthProviderProps {
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [initialAuth] = useState(() => {
-    const storedToken = localStorage.getItem('wellspring_token');
-    const storedUser = localStorage.getItem('wellspring_user');
+    const storedToken = localStorage.getItem('wellspring_token') ?? sessionStorage.getItem('wellspring_token');
+    const storedUser = localStorage.getItem('wellspring_user') ?? sessionStorage.getItem('wellspring_user');
 
     if (!storedToken || !storedUser) {
       return { token: null, user: null };
@@ -57,6 +57,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
     localStorage.removeItem('wellspring_token');
     localStorage.removeItem('wellspring_user');
+    sessionStorage.removeItem('wellspring_token');
+    sessionStorage.removeItem('wellspring_user');
     return { token: null, user: null };
   });
 
@@ -64,9 +66,13 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const [token, setToken] = useState<string | null>(initialAuth.token);
   const loading = false;
 
-  const login = (newToken: string, newUser: User) => {
-    localStorage.setItem('wellspring_token', newToken);
-    localStorage.setItem('wellspring_user', JSON.stringify(newUser));
+  const login = (newToken: string, newUser: User, rememberMe = true) => {
+    const storage = rememberMe ? localStorage : sessionStorage;
+    const otherStorage = rememberMe ? sessionStorage : localStorage;
+    otherStorage.removeItem('wellspring_token');
+    otherStorage.removeItem('wellspring_user');
+    storage.setItem('wellspring_token', newToken);
+    storage.setItem('wellspring_user', JSON.stringify(newUser));
     setToken(newToken);
     setUser(newUser);
   };
@@ -74,6 +80,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
   const logout = () => {
     localStorage.removeItem('wellspring_token');
     localStorage.removeItem('wellspring_user');
+    sessionStorage.removeItem('wellspring_token');
+    sessionStorage.removeItem('wellspring_user');
     setToken(null);
     setUser(null);
   };
