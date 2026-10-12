@@ -67,7 +67,17 @@ jobs:
           java -jar target/wellspring-backend-1.0.0.jar > /tmp/wellspring.log 2>&1 &
           for attempt in $(seq 1 30); do
             if curl --fail --silent --max-time 2 http://127.0.0.1:8080/api/health; then
-              echo "Backend started and Flyway migrations completed."
+              curl --fail --silent --max-time 5 http://127.0.0.1:8080/api/diseases > /tmp/diseases.json
+              python3 -c "import json; d=json.load(open('/tmp/diseases.json')); assert d['success'] and any(x['name']=='Diabetes' for x in d['data'])"
+              curl --fail --silent --max-time 5 -X POST http://127.0.0.1:8080/api/auth/register -H 'Content-Type: application/json' -d '{"name":"CI Smoke User","email":"ci-smoke@example.com","password":"SmokeTestPass!123"}' > /tmp/register.json
+              python3 -c "import json; d=json.load(open('/tmp/register.json')); assert d['success'] and d['data']['token']"
+              curl --fail --silent --max-time 5 -X POST http://127.0.0.1:8080/api/auth/login -H 'Content-Type: application/json' -d '{"email":"ci-smoke@example.com","password":"SmokeTestPass!123"}' > /tmp/login.json
+              TOKEN=$(python3 -c "import json; print(json.load(open('/tmp/login.json'))['data']['token'])")
+              curl --fail --silent --max-time 5 http://127.0.0.1:8080/api/auth/me -H "Authorization: Bearer $TOKEN" > /tmp/me.json
+              python3 -c "import json; d=json.load(open('/tmp/me.json')); assert d['success'] and d['data']['email']=='ci-smoke@example.com'"
+              STATUS=$(curl --silent --max-time 5 -o /dev/null -w '%{http_code}' http://127.0.0.1:8080/api/support -H "Authorization: Bearer $TOKEN")
+              test "$STATUS" = "403"
+              echo "Flyway migrations, public data, registration, login, current-user access and admin authorization passed."
               exit 0
             fi
             sleep 2
