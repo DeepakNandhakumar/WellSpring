@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface User {
   id: number;
@@ -32,28 +32,37 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Check for stored auth data on mount
+  const [initialAuth] = useState(() => {
     const storedToken = localStorage.getItem('wellspring_token');
     const storedUser = localStorage.getItem('wellspring_user');
-    
-    if (storedToken && storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setToken(storedToken);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('wellspring_token');
-        localStorage.removeItem('wellspring_user');
-      }
+
+    if (!storedToken || !storedUser) {
+      return { token: null, user: null };
     }
-    setLoading(false);
-  }, []);
+
+    try {
+      const parsedUser = JSON.parse(storedUser) as User;
+      if (
+        parsedUser &&
+        typeof parsedUser.id === 'number' &&
+        typeof parsedUser.name === 'string' &&
+        typeof parsedUser.email === 'string' &&
+        (parsedUser.role === 'USER' || parsedUser.role === 'ADMIN')
+      ) {
+        return { token: storedToken, user: parsedUser };
+      }
+    } catch (error) {
+      console.error('Invalid stored authentication state:', error);
+    }
+
+    localStorage.removeItem('wellspring_token');
+    localStorage.removeItem('wellspring_user');
+    return { token: null, user: null };
+  });
+
+  const [user, setUser] = useState<User | null>(initialAuth.user);
+  const [token, setToken] = useState<string | null>(initialAuth.token);
+  const loading = false;
 
   const login = (newToken: string, newUser: User) => {
     localStorage.setItem('wellspring_token', newToken);
