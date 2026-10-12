@@ -11,4 +11,4 @@ COPY --from=build /workspace/target/*.jar /app/app.jar
 USER 10001
 EXPOSE 8080
 ENV SPRING_PROFILES_ACTIVE=prod
-ENTRYPOINT ["sh", "-c", "java -XX:MaxRAMPercentage=75.0 -Dserver.port=$PORT -jar /app/app.jar"]
+ENTRYPOINT ["sh", "-c", "java -XX:MaxRAMPercentage=75.0 -Dserver.port=${PORT:-8080} -jar /app/app.jar"]
