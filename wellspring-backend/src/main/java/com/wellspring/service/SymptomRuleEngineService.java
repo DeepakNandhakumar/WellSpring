@@ -11,7 +11,7 @@ import java.util.*;
 import java.util.stream.Collectors;
 
 /**
- * AI Symptom Rule Engine Service
+ * Educational symptom keyword-matching service
  * Analyzes symptoms using weighted scoring algorithm
  */
 @Service
@@ -189,10 +189,10 @@ public class SymptomRuleEngineService {
     }
 
     /**
-     * Analyze symptoms and return matching diseases with confidence scores
+     * Match symptom keywords for educational information only
      */
     public SymptomAnalysisResponse analyzeSymptoms(String symptomsInput) {
-        log.info("Analyzing symptoms: {}", symptomsInput);
+        log.info("Running educational symptom keyword matching");
         
         if (symptomsInput == null || symptomsInput.trim().isEmpty()) {
             return SymptomAnalysisResponse.builder()
@@ -226,21 +226,16 @@ public class SymptomRuleEngineService {
             }
 
             if (totalScore > 0) {
-                double confidenceScore = (double) totalScore / maxPossibleScore;
-                int confidencePercentage = (int) Math.min(confidenceScore * 100, 100);
-                
-                // Determine severity based on confidence
-                SymptomAnalysisResponse.SeverityLevel severity = determineSeverity(confidencePercentage);
-                
-                // Get recommendation
-                String recommendation = getRecommendation(diseaseKey, confidencePercentage);
+                double matchScore = (double) totalScore / maxPossibleScore;
+                int matchPercentage = (int) Math.min(matchScore * 100, 100);
+
+                String recommendation = getRecommendation();
 
                 matches.add(SymptomAnalysisResponse.DiseaseMatch.builder()
                         .diseaseId(null) // Will be populated from database
                         .diseaseName(formatDiseaseName(diseaseKey))
-                        .confidenceScore(confidenceScore)
-                        .confidencePercentage(confidencePercentage)
-                        .severity(severity)
+                        .matchScore(matchScore)
+                        .matchPercentage(matchPercentage)
                         .recommendation(recommendation)
                         .matchedSymptoms(matchedSymptoms)
                         .matchedCount(matchedSymptoms.size())
@@ -250,7 +245,7 @@ public class SymptomRuleEngineService {
         }
 
         // Sort by confidence score descending
-        matches.sort((a, b) -> Double.compare(b.getConfidenceScore(), a.getConfidenceScore()));
+        matches.sort((a, b) -> Double.compare(b.getMatchScore(), a.getMatchScore()));
 
         // Limit to top 3 matches
         List<SymptomAnalysisResponse.DiseaseMatch> topMatches = matches.stream()
@@ -271,29 +266,11 @@ public class SymptomRuleEngineService {
     }
 
     /**
-     * Determine severity level based on confidence percentage
+     * Keep the recommendation non-diagnostic; a keyword match is not a probability.
      */
-    private SymptomAnalysisResponse.SeverityLevel determineSeverity(int confidencePercentage) {
-        if (confidencePercentage >= 70) {
-            return SymptomAnalysisResponse.SeverityLevel.HIGH;
-        } else if (confidencePercentage >= 40) {
-            return SymptomAnalysisResponse.SeverityLevel.MEDIUM;
-        } else {
-            return SymptomAnalysisResponse.SeverityLevel.LOW;
-        }
-    }
-
-    /**
-     * Get recommendation based on disease and confidence
-     */
-    private String getRecommendation(String diseaseKey, int confidencePercentage) {
-        if (confidencePercentage >= 70) {
-            return "High match detected. We strongly recommend consulting a healthcare provider for proper evaluation.";
-        } else if (confidencePercentage >= 40) {
-            return "Moderate match. Consider monitoring your symptoms and consult a doctor if they persist.";
-        } else {
-            return "Low confidence match. Please provide more detailed symptoms for better analysis.";
-        }
+    private String getRecommendation() {
+        return "This is an educational keyword match, not a diagnosis or probability. " +
+               "Discuss your symptoms with a qualified healthcare professional.";
     }
 
     /**
