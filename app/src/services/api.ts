@@ -14,7 +14,7 @@ const api: AxiosInstance = axios.create({
 // Request interceptor to add auth token
 api.interceptors.request.use(
   (config: InternalAxiosRequestConfig) => {
-    const token = localStorage.getItem('wellspring_token');
+    const token = localStorage.getItem('wellspring_token') || sessionStorage.getItem('wellspring_token');
     if (token) {
       config.headers.Authorization = `Bearer ${token}`;
     }
@@ -36,6 +36,8 @@ api.interceptors.response.use(
           // Unauthorized - clear token and redirect to login
           localStorage.removeItem('wellspring_token');
           localStorage.removeItem('wellspring_user');
+          sessionStorage.removeItem('wellspring_token');
+          sessionStorage.removeItem('wellspring_user');
           window.location.href = '/login';
           break;
         case 403:
