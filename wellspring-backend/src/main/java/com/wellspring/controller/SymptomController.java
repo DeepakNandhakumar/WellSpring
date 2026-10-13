@@ -15,7 +15,6 @@ import org.springframework.web.bind.annotation.*;
 @RestController
 @RequestMapping("/api/symptoms")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class SymptomController {
 
     private final SymptomRuleEngineService ruleEngineService;
