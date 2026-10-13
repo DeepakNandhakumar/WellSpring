@@ -47,14 +47,14 @@ Set `VITE_API_URL` in `.env.local` to the API base URL, normally `http://localho
 
 ### 2. Backend and database
 
-Use an approved Java 17, Maven, and MySQL development environment. Create a database named `wellspring_db`, then configure these environment variables for the backend process:
+Use an approved Java 17, Maven, and MySQL development environment. Create a database named `wellspring_db`. For a brand-new empty database only, run the `schema.sql` and `data.sql` scripts once as described in `DEPLOYMENT.md`; do not run the seed script against an existing database because its sample relationships assume fresh IDs. The application does not auto-run SQL scripts at startup. Then configure these environment variables for the backend process:
 
 - `DB_URL`
 - `DB_USERNAME`
 - `DB_PASSWORD`
 - `JWT_SECRET` — use a strong, unique random secret
 - `CORS_ALLOWED_ORIGINS` — the exact frontend origin, normally `http://localhost:5173`
-- Optional: `JWT_EXPIRATION` and `PORT`
+- Optional: `JWT_EXPIRATION`, `PORT`, and `JPA_DDL_AUTO` (use `validate` in production after schema provisioning)
 
 See `wellspring-backend/.env.example` for a template. Spring Boot does not automatically load that example file; configure the values in your shell or approved secret manager.
 
