@@ -1,15 +1,17 @@
-import path from "path"
-import react from "@vitejs/plugin-react"
-import { defineConfig } from "vite"
-import { inspectAttr } from 'kimi-plugin-inspect-react'
+import { fileURLToPath } from 'node:url';
+import path from 'node:path';
+import react from '@vitejs/plugin-react';
+import { defineConfig } from 'vite';
 
-// https://vite.dev/config/
+const rootDir = path.dirname(fileURLToPath(import.meta.url));
+
+// Use an absolute asset base so client-side routes also work after deployment.
 export default defineConfig({
-  base: './',
-  plugins: [inspectAttr(), react()],
+  base: '/',
+  plugins: [react()],
   resolve: {
     alias: {
-      "@": path.resolve(__dirname, "./src"),
+      '@': path.resolve(rootDir, './src'),
     },
   },
 });

@@ -1,13 +1,9 @@
--- WellSpring Seed Data
+-- WellSpring reference-content seed data
 -- Preventive Health Intelligence Platform
-
--- Admin User (password: admin123)
-INSERT INTO users (name, email, password, role) VALUES 
-('Admin User', 'admin@wellspring.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.MqrqQzBZN0UfGNEKjN.KDG1QPNKCz9a', 'ADMIN');
-
--- Demo User (password: user123)
-INSERT INTO users (name, email, password, role) VALUES 
-('Demo User', 'user@wellspring.com', '$2a$10$N9qo8uLOickgx2ZMRZoMy.MqrqQzBZN0UfGNEKjN.KDG1QPNKCz9a', 'USER');
+-- Apply only to a newly created/empty WellSpring database, once.
+-- No default users or predictable admin credentials are created.
+-- Create your own account through /api/auth/register, then promote that account
+-- to ADMIN using the documented, direct database-admin procedure.
 
 -- Diseases Data
 INSERT INTO diseases (name, description, symptoms, causes, prevention) VALUES

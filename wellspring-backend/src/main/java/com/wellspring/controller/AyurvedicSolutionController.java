@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/ayurvedic")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class AyurvedicSolutionController {
 
     private final AyurvedicSolutionService solutionService;

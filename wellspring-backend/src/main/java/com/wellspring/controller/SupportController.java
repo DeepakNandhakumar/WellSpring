@@ -18,7 +18,6 @@ import java.util.List;
 @RestController
 @RequestMapping("/api/support")
 @RequiredArgsConstructor
-@CrossOrigin(origins = "*")
 public class SupportController {
 
     private final SupportMessageService messageService;

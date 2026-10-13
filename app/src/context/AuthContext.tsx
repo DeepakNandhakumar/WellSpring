@@ -1,4 +1,4 @@
-import React, { createContext, useContext, useState, useEffect, type ReactNode } from 'react';
+import React, { createContext, useContext, useState, type ReactNode } from 'react';
 
 interface User {
   id: number;
@@ -19,6 +19,32 @@ interface AuthContextType {
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
+function readStoredAuth(): { token: string | null; user: User | null } {
+  const storedToken = localStorage.getItem('wellspring_token');
+  const storedUser = localStorage.getItem('wellspring_user');
+
+  if (!storedToken || !storedUser) {
+    return { token: null, user: null };
+  }
+
+  try {
+    const parsedUser = JSON.parse(storedUser) as User;
+    if (
+      typeof parsedUser.id !== 'number' ||
+      typeof parsedUser.name !== 'string' ||
+      typeof parsedUser.email !== 'string' ||
+      !['USER', 'ADMIN'].includes(parsedUser.role)
+    ) {
+      throw new Error('Stored user data is invalid');
+    }
+    return { token: storedToken, user: parsedUser };
+  } catch {
+    localStorage.removeItem('wellspring_token');
+    localStorage.removeItem('wellspring_user');
+    return { token: null, user: null };
+  }
+}
+
 export const useAuth = () => {
   const context = useContext(AuthContext);
   if (!context) {
@@ -32,28 +58,10 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null);
-  const [token, setToken] = useState<string | null>(null);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    // Check for stored auth data on mount
-    const storedToken = localStorage.getItem('wellspring_token');
-    const storedUser = localStorage.getItem('wellspring_user');
-    
-    if (storedToken && storedUser) {
-      try {
-        const parsedUser = JSON.parse(storedUser);
-        setToken(storedToken);
-        setUser(parsedUser);
-      } catch (error) {
-        console.error('Error parsing stored user:', error);
-        localStorage.removeItem('wellspring_token');
-        localStorage.removeItem('wellspring_user');
-      }
-    }
-    setLoading(false);
-  }, []);
+  const [initialAuth] = useState(readStoredAuth);
+  const [user, setUser] = useState<User | null>(initialAuth.user);
+  const [token, setToken] = useState<string | null>(initialAuth.token);
+  const [loading] = useState(false);
 
   const login = (newToken: string, newUser: User) => {
     localStorage.setItem('wellspring_token', newToken);

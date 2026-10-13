@@ -1,4 +1,5 @@
 import React, { useState } from 'react';
+import axios from 'axios';
 import { Link, useNavigate } from 'react-router-dom';
 import { Eye, EyeOff, Mail, Lock, ArrowRight, Loader2 } from 'lucide-react';
 import { Input } from '@/components/ui/input';
@@ -52,9 +53,12 @@ const Login: React.FC = () => {
           navigate('/dashboard');
         }
       }
-    } catch (error: any) {
+    } catch (error: unknown) {
       console.error('Login error:', error);
-      toast.error(error.response?.data?.message || 'Invalid email or password');
+      const message = axios.isAxiosError<{ message?: string }>(error)
+        ? error.response?.data?.message
+        : undefined;
+      toast.error(message || 'Invalid email or password');
     } finally {
       setLoading(false);
     }

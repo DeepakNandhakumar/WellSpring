@@ -15,12 +15,8 @@ interface Todo {
 }
 
 const HealthTodo: React.FC = () => {
-  const [todos, setTodos] = useState<Todo[]>([]);
+  const [todos, setTodos] = useState<Todo[]>(() => getTodos());
   const [newTodo, setNewTodo] = useState('');
-
-  useEffect(() => {
-    setTodos(getTodos());
-  }, []);
 
   useEffect(() => {
     saveTodos(todos);

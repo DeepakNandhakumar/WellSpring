@@ -20,4 +20,11 @@ export default defineConfig([
       globals: globals.browser,
     },
   },
+  {
+    // These files intentionally export reusable variants/hooks alongside React components.
+    files: ['src/components/ui/**/*.{ts,tsx}', 'src/context/AuthContext.tsx'],
+    rules: {
+      'react-refresh/only-export-components': 'off',
+    },
+  },
 ])
