@@ -1,0 +1,52 @@
+name: WellSpring CI
+
+on:
+  pull_request:
+    branches: [main, security-repo-cleanup]
+  push:
+    branches: [main, security-repo-cleanup, wellspring-production-upgrade]
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  frontend:
+    name: Frontend build and lint
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: app
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: npm
+          cache-dependency-path: app/package-lock.json
+      - name: Install dependencies
+        run: npm ci
+      - name: Type-check and build
+        run: npm run build
+      - name: Lint
+        run: npm run lint
+
+  backend:
+    name: Backend tests and package
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: wellspring-backend
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: '17'
+          cache: maven
+      - name: Test and package
+        run: mvn -B --no-transfer-progress verify
