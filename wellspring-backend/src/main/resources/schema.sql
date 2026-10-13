@@ -1,47 +1,38 @@
--- WellSpring Database Schema
--- Preventive Health Intelligence Platform
+-- WellSpring database bootstrap schema.
+-- SAFE TO RE-RUN: this script never drops or truncates existing tables/data.
+-- Back up existing databases before applying schema changes.
 
--- Drop tables if they exist (for clean setup)
-DROP TABLE IF EXISTS support_messages;
-DROP TABLE IF EXISTS ayurvedic_solutions;
-DROP TABLE IF EXISTS diet_plans;
-DROP TABLE IF EXISTS medicinal_plants;
-DROP TABLE IF EXISTS diseases;
-DROP TABLE IF EXISTS users;
-
--- Users Table
-CREATE TABLE users (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS users (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL UNIQUE,
     password VARCHAR(255) NOT NULL,
     role VARCHAR(20) NOT NULL DEFAULT 'USER',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    CHECK (role IN ('USER', 'ADMIN'))
-);
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    CONSTRAINT chk_users_role CHECK (role IN ('USER', 'ADMIN'))
+) ENGINE=InnoDB;
 
--- Diseases Table
-CREATE TABLE diseases (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS diseases (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(200) NOT NULL,
     description TEXT,
     symptoms TEXT,
     causes TEXT,
-    prevention TEXT
-);
+    prevention TEXT,
+    INDEX idx_diseases_name (name)
+) ENGINE=InnoDB;
 
--- Medicinal Plants Table
-CREATE TABLE medicinal_plants (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS medicinal_plants (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     plant_name VARCHAR(200) NOT NULL,
     scientific_name VARCHAR(300),
     uses TEXT,
-    image_url VARCHAR(500)
-);
+    image_url VARCHAR(500),
+    INDEX idx_plants_name (plant_name)
+) ENGINE=InnoDB;
 
--- Diet Plans Table
-CREATE TABLE diet_plans (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS diet_plans (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     disease_id BIGINT NOT NULL,
     age_group VARCHAR(50) NOT NULL,
     type VARCHAR(20) NOT NULL,
@@ -49,33 +40,28 @@ CREATE TABLE diet_plans (
     lunch TEXT,
     dinner TEXT,
     avoid_food TEXT,
-    FOREIGN KEY (disease_id) REFERENCES diseases(id) ON DELETE CASCADE,
-    CHECK (type IN ('VEG', 'NONVEG'))
-);
+    CONSTRAINT fk_diet_plans_disease FOREIGN KEY (disease_id)
+        REFERENCES diseases(id) ON DELETE CASCADE,
+    CONSTRAINT chk_diet_plans_type CHECK (type IN ('VEG', 'NONVEG')),
+    INDEX idx_diet_plans_disease (disease_id)
+) ENGINE=InnoDB;
 
--- Ayurvedic Solutions Table
-CREATE TABLE ayurvedic_solutions (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS ayurvedic_solutions (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     disease_id BIGINT NOT NULL,
     herbs TEXT,
     home_remedy TEXT,
     lifestyle_changes TEXT,
-    FOREIGN KEY (disease_id) REFERENCES diseases(id) ON DELETE CASCADE
-);
+    CONSTRAINT fk_ayurvedic_disease FOREIGN KEY (disease_id)
+        REFERENCES diseases(id) ON DELETE CASCADE,
+    INDEX idx_ayurvedic_disease (disease_id)
+) ENGINE=InnoDB;
 
--- Support Messages Table
-CREATE TABLE support_messages (
-    id BIGINT AUTO_INCREMENT PRIMARY KEY,
+CREATE TABLE IF NOT EXISTS support_messages (
+    id BIGINT NOT NULL AUTO_INCREMENT PRIMARY KEY,
     name VARCHAR(100) NOT NULL,
     email VARCHAR(150) NOT NULL,
     message TEXT NOT NULL,
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
-);
-
--- Create indexes for better performance
-CREATE INDEX idx_users_email ON users(email);
-CREATE INDEX idx_diseases_name ON diseases(name);
-CREATE INDEX idx_plants_name ON medicinal_plants(plant_name);
-CREATE INDEX idx_diet_plans_disease ON diet_plans(disease_id);
-CREATE INDEX idx_ayurvedic_disease ON ayurvedic_solutions(disease_id);
-CREATE INDEX idx_support_created ON support_messages(created_at);
+    created_at TIMESTAMP NULL DEFAULT CURRENT_TIMESTAMP,
+    INDEX idx_support_created (created_at)
+) ENGINE=InnoDB;
