@@ -130,7 +130,7 @@ export const isValidPassword = (password: string): boolean => {
 };
 
 // Debounce Function
-export const debounce = <T extends (...args: any[]) => void>(
+export const debounce = <T extends (...args: never[]) => unknown>(
   func: T,
   wait: number
 ): ((...args: Parameters<T>) => void) => {
@@ -151,12 +151,39 @@ export const scrollToTop = (): void => {
 };
 
 // Local Storage Helpers for Todo
-export const getTodos = (): any[] => {
-  const todos = localStorage.getItem('wellspring_todos');
-  return todos ? JSON.parse(todos) : [];
+export interface StoredTodo {
+  id: string;
+  text: string;
+  completed: boolean;
+  createdAt: string;
+}
+
+export const getTodos = (): StoredTodo[] => {
+  const storedTodos = localStorage.getItem('wellspring_todos');
+  if (!storedTodos) return [];
+
+  try {
+    const parsed: unknown = JSON.parse(storedTodos);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter((item): item is StoredTodo =>
+      typeof item === 'object' &&
+      item !== null &&
+      'id' in item &&
+      typeof item.id === 'string' &&
+      'text' in item &&
+      typeof item.text === 'string' &&
+      'completed' in item &&
+      typeof item.completed === 'boolean' &&
+      'createdAt' in item &&
+      typeof item.createdAt === 'string'
+    );
+  } catch {
+    localStorage.removeItem('wellspring_todos');
+    return [];
+  }
 };
 
-export const saveTodos = (todos: any[]): void => {
+export const saveTodos = (todos: StoredTodo[]): void => {
   localStorage.setItem('wellspring_todos', JSON.stringify(todos));
 };
 
@@ -208,7 +235,15 @@ export const yogaCategories = [
 ];
 
 // Yoga Poses Data
-export const yogaPoses: Record<string, any[]> = {
+export interface YogaPose {
+  name: string;
+  duration: string;
+  difficulty: string;
+  description: string;
+  videoId: string;
+}
+
+export const yogaPoses: Record<string, YogaPose[]> = {
   diabetes: [
     { name: 'Vajrasana (Thunderbolt Pose)', duration: '5-10 mins', difficulty: 'Easy', description: 'Sit on your heels with back straight. Improves digestion and regulates blood sugar.', videoId: 'lDHE0Tvoyyo' },
     { name: 'Paschimottanasana (Seated Forward Bend)', duration: '30-60 secs', difficulty: 'Medium', description: 'Forward bend while seated. Stimulates pancreas and reduces abdominal fat.', videoId: 'E5FtZEVC424' },
